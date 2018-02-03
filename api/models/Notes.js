@@ -20,6 +20,7 @@ module.exports = {
       }
   },
 add: function (req, res) {
+  
   Notes.create(req.body).exec(function (err, notes) {
     if (err) {
       return res.json(err.status, {err: err});
@@ -32,7 +33,7 @@ add: function (req, res) {
   });
 },
 getNotes: function (req, res) {
-
+  
   Notes.find({emails: req.body.emails}, function (err, note) {
     if (err) {
       return res.json(err.status, {err: err});
@@ -48,7 +49,7 @@ getEditNote: function (req, res) {
       return res.json(err.status, {err: err});
     }
     else {
-      res.json(200, {notes: note});
+      res.json(200, note);
     }
   });
 },
@@ -60,19 +61,22 @@ editNote: function (req, res) {
       return res.json(err.status, {err: err});
     }
     else if (note) {
-      Notes.update({id: req.body.id}, {note: editnote}, function (err, result) {
+      Notes.update({id: req.body.id}, {note: editnote,
+        title :req.body.title,
+        tag:req.body.tag,
+        color:req.body.color}, 
+        function (err, result) {
         if (err) {
           res.json(err);
         }
         else {
-          res.json(result);
+          res.json(note);
         }
       });
     }
     else {
-      res.json(200, {notes: note});
+      res.json(200,note);
     }
-
 
   });
 },
@@ -87,16 +91,16 @@ deleteNote: function (req, res) {
           res.json(err);
         }
         else {
-          res.json('note deleted');
+          res.json(200,{note:'note deleted'});
         }
 
       });
     }
 
     else {
-      res.json(200, 'note not found');
+      res.json(404, {note:'note not found'});
     }
   });
-},
+}
 
 };

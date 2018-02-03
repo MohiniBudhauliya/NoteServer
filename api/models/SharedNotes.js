@@ -22,7 +22,10 @@ module.exports = {
     },
     tag: {
       type: 'String'
-    }
+    },
+    fcm_token: {
+      type: 'String'
+}
   },
   shareNote: function (req, res) {
     User.findOne({email: req.body.reciever_email}, function (err, email) {
@@ -43,7 +46,7 @@ module.exports = {
       }
 
       else {
-        res.json(200, 'email not found');
+        res.json(200, {result:'email not found'});
       }
     });
   },
@@ -53,7 +56,67 @@ module.exports = {
         return res.json(err.status, {err: err});
       }
       else {
-        res.json(200, {notes: sharednote});
+        res.json(200, sharednote);
+      }
+    });
+  },
+  getEditSharedNote: function (req, res) {
+    SharedNotes.findOne({$and :[{reciever_email:req.body.reciever_email},{note: req.body.note}]}, function (err, note) {
+      if (err) {
+        return res.json(err.status, {err: err});
+      }
+      else {
+        res.json(200,note);
+      }
+    });
+  },
+  editSharedNote: function (req, res) {
+    editnote = req.body.note;
+    SharedNotes.findOne({id: req.body.id}, function (err, note) {
+      if (err) {
+        return res.json(err.status, {err: err});
+      }
+      else if (note) {
+        SharedNotes.update({id: req.body.id}, {
+          note: editnote,
+          title: req.body.title,
+          tag: req.body.tag,
+          color: req.body.color
+        }, function (err, result) {
+          if (err) {
+            res.json(err);
+          }
+          else {
+            res.json(note);
+          }
+        });
+      }
+      else {
+        res.json(200, note);
+      }
+
+
+});
+  },
+  deleteSharedNote: function (req, res) {
+    SharedNotes.findOne({$and: [{reciever_email: req.body.reciever_email}, {note: req.body.note}]}, function (err, note) {
+      if (err) {
+        return res.json(err.status, {err: err});
+      }
+      else if (note) {
+        SharedNotes.destroy({id: note.id}).exec(function (err, result) {
+          if (err) {
+            res.json(err);
+          }
+          else {
+            res.json({delete: 'note deleted'});
+          }
+
+        });
+      }
+
+      else {
+        res.json(200, {not_found: 'note not found'});
       }
     });
   }

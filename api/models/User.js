@@ -3,14 +3,14 @@ module.exports = {
   schema: true,
   attributes: {
     email: {
-      type: 'email',
+      type:'email',
       required: true,
       unique: true
     },
     token: {
       type: 'String',
       required: true,
-      unique: 'true'
+    
 
     }
   },
@@ -22,7 +22,7 @@ module.exports = {
         return res.status(500).send();
       }
       else if (result) {
-        ////sails.log("user already exit - type:", userObj.type);
+        //sails.log("user already exit - type:", userObj.type);
         //var token = jwt.sign(userObj, sails.config.globals.jwt_secret, {expiresIn: "365d"});
         result.token = jwToken.issue({id: result.id});
         res.json(result);

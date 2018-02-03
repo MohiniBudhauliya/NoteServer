@@ -49,10 +49,13 @@ module.exports.routes = {
   'POST /login': 'UserController.signupOrLogin',//test login and get JWT (testing purpose)
   'POST /note/add': 'NotesController.add',
   'POST /note': 'NotesController.getNotes',
-  'POST /note/edit': 'NotesApiController.editNote',
+  'POST /note/edit': 'NotesController.editNote',
   'POST /note/getedit': 'NotesController.getEditNote',
   'POST /note/delete': 'NotesController.deleteNote',
   'POST /note/share': 'SharednotesController.shareNote',
-  'POST /note/shared': 'SharednotesController.sharedNotes'
+  'POST /note/shared': 'SharednotesController.sharedNotes',
+  'POST /note/shared/edit':'SharedNotesController.editSharedNote',
+  'POST /note/shared/getedit' :'SharedNotesController.getEditSharedNote',
+  'POST /note/shared/delete' :'SharedNotesController.deleteSharedNote'
 
 };

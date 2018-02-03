@@ -3,5 +3,5 @@ module.exports = {
 
     User.signupOrLogin(req, res);
   },
-  logOut: {}
+  
 };

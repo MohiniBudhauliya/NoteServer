@@ -15,7 +15,7 @@ module.exports = {
   },
   deleteNote: function (req, res) {
     Notes.deleteNote(req,res);
-  },
+  }
 
 
 
