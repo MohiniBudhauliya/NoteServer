@@ -46,7 +46,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'POST /login': 'UserController.signupOrLogin',//test login and get JWT (testing purpose)
+  'POST /login': 'UserController.signupOrLogin',
+  'POST /user/updatetoken' : 'UserController.UpdateFcmToken',//test login and get JWT (testing purpose)
   'POST /note/add': 'NotesController.add',
   'POST /note': 'NotesController.getNotes',
   'POST /note/edit': 'NotesController.editNote',
@@ -56,6 +57,7 @@ module.exports.routes = {
   'POST /note/shared': 'SharednotesController.sharedNotes',
   'POST /note/shared/edit':'SharedNotesController.editSharedNote',
   'POST /note/shared/getedit' :'SharedNotesController.getEditSharedNote',
-  'POST /note/shared/delete' :'SharedNotesController.deleteSharedNote'
+  'POST /note/shared/delete' :'SharedNotesController.deleteSharedNote',
+  'POST /notification' : 'SharedNotesController.FirebaseNotification'
 
 };

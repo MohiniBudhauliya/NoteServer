@@ -42,6 +42,20 @@ module.exports = {
       }
     });
   },
+  UpdateFcmToken: function(req,res){
+    var email = req.body.email;
+    User.findOne({email: email}, function (err, result) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send();
+      }
+      else if (result) {
+        User.update({email: email},{fcm_token:req.body.fcm_token});
+            res.json({user:user});
+      }
+    });
+
+}
 
 
 };

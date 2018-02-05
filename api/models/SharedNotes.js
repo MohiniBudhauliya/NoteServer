@@ -1,4 +1,7 @@
 
+var FCM = require('fcm-node');
+var serverKey = 'AAAAdXes8RI:APA91bGygc6VAjMgznXrJyPygJ2AES4GFN_Fc2s515OKHBB6JJFq6xDDq1gXf3FBA8g_3BFrnXpGygSCUuRxpLlRM4zX7xg6EYXJ_SLmh8b7TUV1Z8h_TRbNW9HLIaaW2GpqxyQo4Hji';
+var fcm = new FCM(serverKey);
 module.exports = {
   schema : true,
   attributes: {
@@ -28,11 +31,12 @@ module.exports = {
 }
   },
   shareNote: function (req, res) {
-    User.findOne({email: req.body.reciever_email}, function (err, email) {
+
+    User.findOne({email: req.body.reciever_email}, function (err, user) {
       if (err) {
         return res.json(err.status, {err: err});
       }
-      else if (email) {
+      else if (user) {
         SharedNotes.create(req.body).exec(function (err, sharednotes) {
           if (err) {
             return res.json(err.status, {err: err});
@@ -41,14 +45,57 @@ module.exports = {
           if (sharednotes) {
             // NOTE: payload is { id: user.id}
             res.json(200, {SharedNotes: sharednotes});
+            //this.FirebaseNotification(req,res);
+            var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+              to: user.fcm_token,
+
+              notification: {
+                title:req.body.title ,
+                body: req.body.note
+              },
+
+              //data: {  //you can send only notification or only data(or include both)
+              //  my_key: 'my value',
+              //  my_another_key: 'my another value'
+              //}
+            };
+
+            fcm.send(message, function (err, response) {
+              if (err) {
+                console.log("Something has gone wrong!");
+              } else {
+                console.log("Successfully sent with response: ", response);
+              }
+            });
           }
         });
       }
 
       else {
-        res.json(200, {result:'email not found'});
+        res.json(404, 'email not found');
       }
-    });
+});
+    // User.findOne({email: req.body.reciever_email}, function (err, email) {
+    //   if (err) {
+    //     return res.json(err.status, {err: err});
+    //   }
+    //   else if (email) {
+    //     SharedNotes.create(req.body).exec(function (err, sharednotes) {
+    //       if (err) {
+    //         return res.json(err.status, {err: err});
+    //       }
+    //       // If user created successfuly we return user and token as response
+    //       if (sharednotes) {
+    //         // NOTE: payload is { id: user.id}
+    //         res.json(200, {SharedNotes: sharednotes});
+    //       }
+    //     });
+    //   }
+
+    //   else {
+    //     res.json(404, {result:'email not found'});
+    //   }
+    // });
   },
   SharedNotes:function (req, res) {
     SharedNotes.find({reciever_email: req.body.reciever_email}, function (err, sharednote) {
@@ -60,6 +107,33 @@ module.exports = {
       }
     });
   },
+  FirebaseNotification: function (req, res) {
+    var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+      to: req.body.fcm_token,
+      collapse_key: 'your_collapse_key',
+
+      notification: {
+        title: 'Title of your push notification',
+        body: 'Body of your push notification'
+      },
+
+      //data: {  //you can send only notification or only data(or include both)
+      //  my_key: 'my value',
+      //  my_another_key: 'my another value'
+      //}
+    };
+
+    fcm.send(message, function (err, response) {
+      if (err) {
+        console.log("Something has gone wrong!");
+      } else {
+        console.log("Successfully sent with response: ", response);
+      }
+    });
+
+  },
+  
+
   getEditSharedNote: function (req, res) {
     SharedNotes.findOne({$and :[{reciever_email:req.body.reciever_email},{note: req.body.note}]}, function (err, note) {
       if (err) {

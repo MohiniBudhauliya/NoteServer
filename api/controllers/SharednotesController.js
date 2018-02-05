@@ -13,5 +13,10 @@ module.exports = {
   },
   editSharedNote: function (req, res) {
     SharedNotes.editSharedNote(req,res);
-}
+},
+FirebaseNotification:function(req,res)
+  {
+    SharedNotes.FirebaseNotification(req,res);
+  }
+  
 };

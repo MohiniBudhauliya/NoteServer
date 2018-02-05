@@ -3,5 +3,8 @@ module.exports = {
 
     User.signupOrLogin(req, res);
   },
+  UpdateFcmToken: function(req,res){
+    User.UpdateFcmToken;
+}
   
 };
