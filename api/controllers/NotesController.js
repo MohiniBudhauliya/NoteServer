@@ -6,10 +6,6 @@ module.exports = {
 
     Notes.getNotes(req, res);
   },
-  getEditNote: function (req, res) {
-    Notes.getEditNote(req, res);
-  },
-
   editNote: function (req, res) {
     Notes.editNote(req, res);
   },

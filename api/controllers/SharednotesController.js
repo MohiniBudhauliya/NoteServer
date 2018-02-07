@@ -8,9 +8,6 @@ module.exports = {
   deleteSharedNote: function (req, res) {
     SharedNotes.deleteSharedNote(req,res);
   },
-  getEditSharedNote: function (req, res) {
-    SharedNotes.getEditSharedNote(req,res);
-  },
   editSharedNote: function (req, res) {
     SharedNotes.editSharedNote(req,res);
 },
